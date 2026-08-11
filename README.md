@@ -2,71 +2,43 @@
 
 A simple, easy, and flexible way of estimating Bayesian VARs taking into consideration the pandemic period, as a Minnesota prior with time dummies, available in MATLAB, Julia, Python, and R.  Codes embed a test for the optimal level of shrinkage for the pandemic period.
 
-Also available MATLAB Pandemic Priors extensions of the Giannone, Lenza, and Primiceri (2015) optimal priors and the Chan (2022) asymmetric conjugate priors.
+Also available are a DSGE extension of the Pandemic Priors, and MATLAB extensions of the Giannone, Lenza, and Primiceri (2015) optimal priors and the Chan (2022) asymmetric conjugate priors.
 
 Paper available at my website: www.danilocascaldigarcia.com
 
 Use of code for research purposes is permitted as long as proper reference to source is given.
 
-This version: February 2023
+This version: August 2026
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-MATLAB:
+Repository structure:
 
-The main program BVAR_Pandemic_Priors.m performs the Pandemic Priors Bayesian VAR estimation with the time dummies on March to August 2020, and identifies an EBP shock with a recursive Cholesky structure, where EBP is ordered first.
+Each language folder is self-contained and has its own README with details and instructions.
 
-"covid_periods" defines how many monthly dummies to include (starting from and including March 2020).  Set to zero to run a conventional Minnesota Prior as in Banbura, Giannone, and Reichlin (2010).
+MATLAB/    Main implementation.  Run run_pandemic_priors.m.  See MATLAB/README.md.
 
-"phi" defines how much signal the econometrician would like to take from the pandemic period.  With phi = 999, the value for phi will be the optimal from a marginal likelihood standpoint. With phi close to zero the time dummies are "active," soaking all the pandemics variance; with phi close to infinity the time dummies are "inactive," and the model boils down to a conventional Minnesota Prior.
+Julia/     Main implementation.  Run run_pandemic_priors.jl.  See Julia/README.md.
 
-Dummy observations are created with the auxiliary function pandemicpriors.m.
+Python/    Main implementation.  Run run_pandemic_priors.py.  See Python/README.md.
 
-Optimal phi calculated with the auxiliary function OptimalPhi.m.
+R/         Main implementation.  Run run_pandemic_priors.R.  See R/README.md.
 
-Codes written in MATLAB 2022a
+DSGE/      DSGE extension: the Pandemic Priors dummies in the measurement equation of a small New Keynesian model, on simulated and US data.  See DSGE/README.md.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Other_implementations/    MATLAB extensions of the Giannone, Lenza, and Primiceri (2015) optimal priors and the Chan (2022) asymmetric conjugate priors.
 
-Julia:
-
-The main program BVAR_Pandemic_Priors.jl performs the Pandemic Priors Bayesian VAR estimation with the time dummies on March to August 2020, and identifies an EBP shock with a recursive Cholesky structure, where EBP is ordered first.
-
-"covid_periods" defines how many monthly dummies to include (starting from and including March 2020).  Set to zero to run a conventional Minnesota Prior as in Banbura, Giannone, and Reichlin (2010).
-
-"\phi" defines how much signal the econometrician would like to take from the pandemic period. With \phi =999, the value for \phi will be the optimal from a marginal likelihood standpoint. With \phi close to zero the time dummies are "active," soaking all the pandemics variance; with phi close to infinity the time dummies are "inactive," and the model boils down to a conventional Minnesota Prior.
-
-Auxiliary functions, including the creation of the dummy observations are stored in functions_Pandemic_Priors.jl.
-
-Codes written in Julia v1.8.5
+Legacy_files/    Earlier versions of the codes in MATLAB, Julia, Python, and R, kept for reference.  See Legacy_files/README.md.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Python:
-
-The main program BVAR_Pandemic_Priors.py or BVAR_Pandemic_Priors.ipynb (Jupyter Notebook) performs the Pandemic Priors Bayesian VAR estimation with the time dummies on March to August 2020, and identifies an EBP shock with a recursive Cholesky structure, where EBP is ordered first.
+The main programs perform the Pandemic Priors Bayesian VAR estimation with time dummies on the pandemic period, and identify an EBP shock with a recursive Cholesky structure, where EBP is ordered first.  All options are set in the "USER SETTINGS" block at the top of each run_pandemic_priors script; see the language folder's README for the full list.
 
 "covid_periods" defines how many monthly dummies to include (starting from and including March 2020).  Set to zero to run a conventional Minnesota Prior as in Banbura, Giannone, and Reichlin (2010).
 
-"phi" defines how much signal the econometrician would like to take from the pandemic period. With phi =999, the value for phi will be the optimal from a marginal likelihood standpoint. With phi close to zero the time dummies are "active," soaking all the pandemics variance; with phi close to infinity the time dummies are "inactive," and the model boils down to a conventional Minnesota Prior.
+"phi" is the Gaussian prior precision on the pandemic dummy coefficients, and defines how much signal the econometrician would like to take from the pandemic period.  With phi close to zero the time dummies are "active," soaking all the pandemics variance; with phi close to infinity the time dummies are "inactive," and the model boils down to a conventional Minnesota Prior.
 
-Auxiliary functions, including the creation of the dummy observations are stored in functions_Pandemic_Priors.py.
-
-Codes written in Python 3.9.13 64-bit
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-R:
-
-The main program BVAR_Pandemic_Priors.R performs the Pandemic Priors Bayesian VAR estimation with the time dummies on March to August 2020, and identifies an EBP shock with a recursive Cholesky structure, where EBP is ordered first.
-
-"covid_periods" defines how many monthly dummies to include (starting from and including March 2020).  Set to zero to run a conventional Minnesota Prior as in Banbura, Giannone, and Reichlin (2010).
-
-"\phi" defines how much signal the econometrician would like to take from the pandemic period. With \phi =999, the value for \phi will be the optimal from a marginal likelihood standpoint. With \phi close to zero the time dummies are "active," soaking all the pandemics variance; with phi close to infinity the time dummies are "inactive," and the model boils down to a conventional Minnesota Prior.
-
-Auxiliary functions, including the creation of the dummy observations are stored in functions_Pandemic_Priors.R.
-
-Codes written in R 4.3.2 and RStudio 2023.12.0
+"phi_mode" controls how phi is chosen: "single" selects one phi on a grid by marginal likelihood, "perperiod" selects one phi per pandemic month (phi_1 to phi_h) with the optimizer, or a fixed scalar/vector can be supplied directly (a value close to zero leaves the dummies uninformative).  The Minnesota tightness (lambda), sum-of-coefficients tightness (tau), and co-persistence prior (coper) can likewise be fixed or selected by marginal likelihood.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 References:

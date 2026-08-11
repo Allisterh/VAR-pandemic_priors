@@ -1,0 +1,105 @@
+===========================================================================
+ DSGE Pandemic Priors -- data sources
+===========================================================================
+
+The CSV files in this folder are already provided; this note documents where
+they come from so the dataset can be reproduced or updated.
+
+WHAT THE MODEL NEEDS
+--------------------
+The 3-equation New Keynesian model has three observables, at quarterly
+frequency:
+    (1) output gap           x
+    (2) inflation            pi
+    (3) nominal policy rate  i
+Pandemic window = 2020Q1, 2020Q2, 2020Q3 (the 3 dummy quarters).
+
+Both candidate policy rates and both candidate inflation series are included,
+so the illustration can be run for any inflation x policy-rate combination.
+
+Raw levels/rates only -- no transformations. Do not take logs, growth rates,
+gaps, or demean the series. All of that is done in MATLAB (the model is in
+deviations from a zero steady state, so everything is detrended by the
+loader). The series are stored exactly as the source provides them.
+
+
+GENERAL FRED SETTINGS FOR EVERY SERIES
+--------------------------------------
+- Frequency:        Quarterly
+- Units:            series default (see per-series note)
+- Date range:       1985-01-01 to latest available (1960-01-01 also works if
+                    the source offers it; record the actual start date)
+- Download format:  CSV
+- Keep the default file: a DATE column + one value column named by the series
+  ID. One file per series.
+
+
+SERIES  (7 files total)
+-----------------------
+
+OUTPUT GAP (both used together)
+
+[1] GDPC1
+    Real Gross Domestic Product (chained 2017 dollars)
+    Frequency: Quarterly (native). Units: default (Billions of Chained 2017 $).
+
+[2] GDPPOT
+    Real Potential Gross Domestic Product (CBO)
+    Frequency: Quarterly (native). Units: default.
+    The gap is built as x = 100*(GDPC1 - GDPPOT)/GDPPOT.
+
+INFLATION (both included; choose one)
+
+[3] GDPDEF
+    Gross Domestic Product: Implicit Price Deflator
+    Frequency: Quarterly (native). Units: Index (default).
+    inflation = 100 * quarterly log-change of GDPDEF.
+
+[4] PCEPILFE
+    Personal Consumption Expenditures Excluding Food and Energy
+    (core PCE), Price Index
+    Native monthly. Set Frequency: Quarterly, Aggregation method: Average.
+    Units: Index (default).
+    inflation = 100 * quarterly log-change of PCEPILFE.
+
+POLICY RATE (both included; choose one)
+
+[5] FEDFUNDS
+    Effective Federal Funds Rate (percent, annualized)
+    Native monthly. Set Frequency: Quarterly, Aggregation method: Average.
+    Units: default (Percent).
+    Near 0 during 2020 (zero lower bound), so the pandemic policy stance is
+    muted under this measure.
+
+[6] Wu-Xia Shadow Federal Funds Rate  (not on FRED)
+    From the Atlanta Fed:
+    https://www.atlantafed.org/cqer/research/wu-xia-shadow-federal-funds-rate
+    Monthly; averaged to quarterly by the loader. Goes negative through the
+    ZLB. Saved as wu_xia_shadow_rate.csv (.xlsx also accepted).
+
+OPTIONAL CROSS-CHECK SERIES
+
+[7] CPIAUCSL  (headline CPI, monthly)
+    An inflation cross-check. Frequency: Quarterly, Aggregation: Average.
+
+
+FILE LOCATION AND NAMING
+------------------------
+All files live in this data/ folder. Keep the default FRED filenames
+(GDPC1.csv, GDPPOT.csv, GDPDEF.csv, PCEPILFE.csv, FEDFUNDS.csv, ...) and name
+the Atlanta Fed series wu_xia_shadow_rate.csv. The loader aligns them all on
+quarterly dates.
+
+CHECKLIST
+---------
+[ ] GDPC1.csv                (real GDP)
+[ ] GDPPOT.csv               (potential GDP)
+[ ] GDPDEF.csv               (GDP deflator)
+[ ] PCEPILFE.csv             (core PCE price index)
+[ ] FEDFUNDS.csv             (effective fed funds rate)
+[ ] wu_xia_shadow_rate.csv   (Wu-Xia shadow rate, Atlanta Fed)
+[ ] CPIAUCSL.csv             (optional CPI cross-check)
+
+With these in the data/ folder, build_data_nk.m assembles data_nk.csv on a
+common quarterly grid.
+===========================================================================
